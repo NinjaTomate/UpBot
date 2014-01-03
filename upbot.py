@@ -53,8 +53,10 @@ def recvloop():
                 send_data("PRIVMSG %s :Available commands: %s" % (CHANNEL, commands))
 
             if ".update" in msgarr[0] and user == "TomatoGuy":
-                output=subprocess.Popen(["svn", "update", "http://localhost/svn/ircbot/trunk", \
-                    "/home/tomate/Python/Moddable_IRC_Bot/"], stdout=subprocess.PIPE)
+                #output=subprocess.Popen(["svn", "update", "http://localhost/svn/ircbot/trunk", \
+                #    "/home/tomate/Python/Moddable_IRC_Bot/"], stdout=subprocess.PIPE)
+                output=subprocess.Popen(["git", "clone", "git://github.com/NinjaTomate/UpBot.git",\
+                     "~/Python/Moddable_IRC_Bot"],  stdout=subprocess.PIPE)
                 for fuckyoupython in output.stdout:
                     send_data("PRIVMSG %s :%s" % (CHANNEL, fuckyoupython))
             if ".reload" in msgarr[0] and user == "TomatoGuy":
