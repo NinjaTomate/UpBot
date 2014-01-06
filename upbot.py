@@ -1,7 +1,5 @@
 import socket, string, os, sys, commands, variables, subprocess
-#fpid = os.fork()
-#if fpid!=0:
-#    sys.exit(0)
+
 SERVER = 'irc.lolipower.org'
 PORT = 6667
 NICKNAME = sys.argv[2] #Uncomment me for deployment
