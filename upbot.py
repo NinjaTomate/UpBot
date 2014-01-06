@@ -55,7 +55,7 @@ def recvloop():
             if ".update" in msgarr[0] and user == "TomatoGuy":
                 #output=subprocess.Popen(["svn", "update", "http://localhost/svn/ircbot/trunk", \
                 #    "/home/tomate/Python/Moddable_IRC_Bot/"], stdout=subprocess.PIPE)
-                home = subprocess.Popne("$HOME", stdout=subprocess.PIPE)[0]
+                home = os.getcwd()
                 output=subprocess.Popen(["git", "clone", "git://github.com/NinjaTomate/UpBot.git",\
                      "%s/Moddable_IRC_Bot" % home],  stdout=subprocess.PIPE)
                 for PythonIsGreat in output.stdout:
