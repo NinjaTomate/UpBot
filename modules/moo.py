@@ -16,4 +16,4 @@ def moo(send_data, msgarr, user):
 		for PythonIsGreat in output.stdout:
 			send_data("PRIVMSG %s :%s" % (variables.channel, PythonIsGreat))
 	else:
-		send_data("PRIVMSG %s :%s" % (variables.channel, Syntax error.))
+		send_data("PRIVMSG %s :%s" % (variables.channel, "Syntax error."))
