@@ -1,6 +1,6 @@
 import socket, string, os, sys, commands, variables, subprocess
 
-SERVER = 'irc.lolipower.org'
+SERVER = 'irc.rizon.net'
 PORT = 6667
 NICKNAME = sys.argv[2] #Uncomment me for deployment
 #NICKNAME = "TomatoTestBot" #Remove me for deployment
