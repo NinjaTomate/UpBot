@@ -4,7 +4,8 @@ def moo(send_data, msgarr, user):
 	msghold=""
 	for word in msgarr:
 		print word
-		if not (word == "") and not (word == ".moo") and not ("&" in word):
+		if not (word == "") and not (word == ".moo") and not ("&" in word)\
+		and not ("-" in word) and not ("´" in word) and not ("`" in word):
 			message+= word + " "
 	message=string.split(message, ".moo")
 	for word in message:
