@@ -11,5 +11,5 @@ def moo(send_data, msgarr, user):
 		msghold+=word
 	message=msghold
 	output=subprocess.Popen(["cowsay", message],  stdout=subprocess.PIPE)
-    for PythonIsGreat in output.stdout:
-    	send_data("PRIVMSG %s :%s" % (CHANNEL, PythonIsGreat))
+	for PythonIsGreat in output.stdout:
+		send_data("PRIVMSG %s :%s" % (CHANNEL, PythonIsGreat))
