@@ -4,14 +4,15 @@ def moo(send_data, msgarr, user):
 	msghold=""
 	for word in msgarr:
 		print word
-		if not (word == "") and not (word == ".moo") and not ("&" in word)\
-		and not ("-" in word):
+		if not (word == "") and not (word == ".moo"):
 			message+= word + " "
 	message=string.split(message, ".moo")
 	for word in message:
 		msghold+=word
 	message=msghold
 	print message
-	output=subprocess.Popen(["cowsay", message],  stdout=subprocess.PIPE)
-	for PythonIsGreat in output.stdout:
-		send_data("PRIVMSG %s :%s" % (variables.channel, PythonIsGreat))
+	if not ("&" in word) and not ("-" in word):
+		output=subprocess.Popen(["cowsay", message],  stdout=subprocess.PIPE)
+		for PythonIsGreat in output.stdout:
+			send_data("PRIVMSG %s :%s" % (variables.channel, PythonIsGreat))
+	else send_data("PRIVMSG %s :%s" % (variables.channel, Syntax error.))
