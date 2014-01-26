@@ -99,7 +99,7 @@ def recvloop():
                     print "%s = %s?" % (command, COMMAND)
                     if command == COMMAND:
                         print "Found module %s" % command
-                        execute(command, user, msgarr)
+                        help(command, user, msgarr)
                         break;
             elif "." in msgarr[0]:
                 print "Command detected."
