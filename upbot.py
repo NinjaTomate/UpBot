@@ -34,11 +34,11 @@ def execute(command, user, msgarr):
     print "Executing vsquare.%s" % command
     exec("%s.%s(send_data, msgarr, user)" % (command, command))
 def help(command, user, msgarr):
-    print "Executing help for %s" % command
+    print "Executing %s.help()" % command
     try:
         exec("%s.help()")
     except:
-        send_data("No help available.")
+        send_data("PRIVMSG %s :No help available." % CHANNEL)
 def reloader(module):
     exec("%s = reload(%s)" % (module, module))
 def loader(module):
