@@ -19,4 +19,5 @@ def moo(send_data, msgarr, user):
 		else:
 			send_data("PRIVMSG %s :%s" % (variables.channel, "Syntax error."))
 def help(send_data):
+	print "Help has been called."
 	send_data("PRIVMSG %s :%s" % (variables.channel, "Prints a cow with the supplied string."))
