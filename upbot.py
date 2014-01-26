@@ -23,7 +23,12 @@ def login(nickname, username='Tomate', password = None, realname='Tomate', hostn
     send_data("USER %s %s %s %s" % (username, hostname, servername, realname))
     send_data("NICK " + nickname)
     send_data("MODE %s +irx" % nickname)
-
+def restart_program():
+    """Restarts the current program.
+    Note: this function does not return. Any cleanup action (like
+    saving data) must be done before calling this function."""
+    python = sys.executable
+    os.execl(python, python, * sys.argv)
 def execute(command, user, msgarr):
     print "Executing vsquare.%s" % command
     exec("%s.%s(send_data, msgarr, user)" % (command, command))
@@ -58,6 +63,8 @@ def recvloop():
                 for PythonIsGreat in output.stdout:
                     print PythonIsGreat
                     send_data("PRIVMSG %s :%s" % (CHANNEL, PythonIsGreat))
+            if ".restart" in msgarr[0] and user == "TomatoGuy":
+                restart_program()
             if ".reload" in msgarr[0] and user == "TomatoGuy":
                 ncount = 0
                 count = 0
