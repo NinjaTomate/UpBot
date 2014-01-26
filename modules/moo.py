@@ -2,7 +2,7 @@ import variables, urllib2, string, subprocess
 def moo(send_data, msgarr, user):
 	message=""
 	msghold=""
-	if not len(msgarr < 2)
+	if not len(msgarr < 2):
 		for word in msgarr:
 			print word
 			if not (word == "") and not (word == ".moo"):
@@ -18,5 +18,5 @@ def moo(send_data, msgarr, user):
 				send_data("PRIVMSG %s :%s" % (variables.channel, PythonIsGreat))
 		else:
 			send_data("PRIVMSG %s :%s" % (variables.channel, "Syntax error."))
-def help():
+def help(send_data):
 	send_data("PRIVMSG %s :%s" % (variables.channel, "Prints a cow with the supplied string."))

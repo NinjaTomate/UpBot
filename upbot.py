@@ -36,7 +36,7 @@ def execute(command, user, msgarr):
 def help(command, user, msgarr):
     print "Executing %s.help()" % command
     try:
-        exec("%s.help()")
+        exec("%s.help(send_data)")
     except:
         send_data("PRIVMSG %s :No help available." % CHANNEL)
 def reloader(module):
