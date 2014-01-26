@@ -22,6 +22,7 @@ def join(channel):
 def login(nickname, username='Tomate', password = None, realname='Tomate', hostname='Spurdo', servername='Server'):
     send_data("USER %s %s %s %s" % (username, hostname, servername, realname))
     send_data("NICK " + nickname)
+    send_data("MODE %s +irx" % nickname)
 
 def execute(command, user, msgarr):
     print "Executing vsquare.%s" % command
