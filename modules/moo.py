@@ -2,7 +2,7 @@ import variables, urllib2, string, subprocess
 def moo(send_data, msgarr, user):
 	message=""
 	msghold=""
-	if not len(msgarr < 2):
+	if not len(msgarr) < 2:
 		for word in msgarr:
 			print word
 			if not (word == "") and not (word == ".moo"):
