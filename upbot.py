@@ -33,6 +33,12 @@ def restart_program():
 def execute(command, user, msgarr):
     print "Executing vsquare.%s" % command
     exec("%s.%s(send_data, msgarr, user)" % (command, command))
+def help(command, user, msgarr):
+    print "Executing help for %s" % command
+    try:
+        exec("%s.help()")
+    except:
+        send_data("No help available.")
 def reloader(module):
     exec("%s = reload(%s)" % (module, module))
 def loader(module):
@@ -86,7 +92,15 @@ def recvloop():
                 if ncount > 0:
                     send_data("PRIVMSG %s :Successfully loaded %s new modules." % (CHANNEL, ncount))
                 send_data("PRIVMSG %s :Successfully reloaded %s modules." % (CHANNEL, count))
-
+            elif ".help" in msgarr[0]:
+                print "Help command used."
+                for COMMAND in COMMANDS:
+                    command =msgarr[1]
+                    print "%s = %s?" % (command, COMMAND)
+                    if command == COMMAND:
+                        print "Found module %s" % command
+                        execute(command, user, msgarr)
+                        break;
             elif "." in msgarr[0]:
                 print "Command detected."
                 for COMMAND in COMMANDS:
