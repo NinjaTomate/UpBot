@@ -52,6 +52,7 @@ def recvloop():
             send_data("PRIVMSG %s PONG" % string.split(buffer, ':')[1])
         if "PRIVMSG" in buffer and CHANNEL in buffer:
             msg = string.split(buffer)[3][1:]
+            print msg
             msgarr = string.split(msg)
             user = string.split(string.split(buffer, ':')[1], '!')[0]
             variables.user=user
