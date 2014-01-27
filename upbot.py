@@ -94,13 +94,16 @@ def recvloop():
                 send_data("PRIVMSG %s :Successfully reloaded %s modules." % (CHANNEL, count))
             elif ".help" in msgarr[0]:
                 print "Help command used."
-                for COMMAND in COMMANDS:
-                    command =msgarr[1]
-                    print "%s = %s?" % (command, COMMAND)
-                    if command == COMMAND:
-                        print "Found module %s" % command
-                        help(command, user, msgarr)
-                        break;
+                try:
+                    for COMMAND in COMMANDS:
+                        command =msgarr[1]
+                        print "%s = %s?" % (command, COMMAND)
+                        if command == COMMAND:
+                            print "Found module %s" % command
+                            help(command, user, msgarr)
+                            break;
+                except:
+                    send_data("PRIVMSG %s :%s" % (CHANNEL, "Please supply a module."))
             elif "." in msgarr[0]:
                 print "Command detected."
                 for COMMAND in COMMANDS:
