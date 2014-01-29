@@ -7,6 +7,7 @@ NICKNAME = sys.argv[2] #Uncomment me for deployment
 CHANNEL = '#' + sys.argv[1]
 COMMANDS = []
 variables.channel = CHANNEL
+variables.permissions = [line.strip() for line in open('permissions.txt')]
 
 IRC = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
