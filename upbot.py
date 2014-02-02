@@ -1,10 +1,10 @@
 import socket, string, os, sys, commands, variables, subprocess
 
-SERVER = sys.argv[1]
+SERVER = 'irc.rizon.net'
 PORT = 6667
-NICKNAME = sys.argv[3] #Uncomment me for deployment
+NICKNAME = sys.argv[2] #Uncomment me for deployment
 #NICKNAME = "TomatoTestBot" #Remove me for deployment
-CHANNEL = '#' + sys.argv[2]
+CHANNEL = '#' + sys.argv[1]
 COMMANDS = []
 variables.channel = CHANNEL
 variables.permissions = [line.strip() for line in open('permissions.txt')]
