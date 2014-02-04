@@ -49,6 +49,7 @@ def reloader(module):
 def loader(module):
     exec("import modules.%s as %s" % (module, module)) in globals()
 def recvloop():
+    global COMMANDS
     while (1):
         buffer = IRC.recv(1024)
         variables.buffer = buffer
@@ -65,6 +66,7 @@ def recvloop():
                 send_data("PRIVMSG %s :User: %s" % (CHANNEL, user))
             if ".commands" in msgarr[0]:
                 commands = ""
+                COMMANDS
                 for item in COMMANDS:
                     commands = commands + item + " "
                 send_data("PRIVMSG %s :Available commands: %s" % (CHANNEL, commands))
@@ -81,7 +83,7 @@ def recvloop():
             if ".reload" in msgarr[0] and user == "TomatoGuy":
                 ncount = 0
                 count = 0
-                global COMMANDS
+                #global COMMANDS
                 oCOMMANDS = COMMANDS
                 COMMANDS = []
                 for item in os.listdir('./modules'):
