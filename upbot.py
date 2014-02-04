@@ -1,10 +1,14 @@
 import socket, string, os, sys, commands, variables, subprocess
 
-SERVER = 'irc.rizon.net'
 PORT = 6667
-NICKNAME = sys.argv[2] #Uncomment me for deployment
-#NICKNAME = "TomatoTestBot" #Remove me for deployment
-CHANNEL = '#' + sys.argv[1]
+try:
+    SERVER = sys.argv[3]
+    NICKNAME = sys.argv[2]
+    CHANNEL = '#' + sys.argv[1]
+except:
+    print "Usage: python upbot.py [channel] [nickname] [server]"
+    sys.exit()
+global COMMANDS
 COMMANDS = []
 variables.channel = CHANNEL
 variables.permissions = [line.strip() for line in open('permissions.txt')]
@@ -20,7 +24,7 @@ def send_data(command):
 def join(channel):
     send_data("JOIN %s" % channel)
 
-def login(nickname, username='Tomate', password = None, realname='Tomate', hostname='Spurdo', servername='Server'):
+def login(nickname, username=sys.argv[1], password = None, realname=sys.argv[1], hostname='Spurdo', servername='Server'):
     send_data("USER %s %s %s %s" % (username, hostname, servername, realname))
     send_data("NICK " + nickname)
     send_data("MODE %s +irx" % nickname)
@@ -51,7 +55,7 @@ def recvloop():
         print variables.buffer
         if string.split(buffer)[0] == "PING":
             send_data("PRIVMSG %s PONG" % string.split(buffer, ':')[1])
-        if "PRIVMSG" in buffer and CHANNEL in buffer:
+        if "PRIVMSG" in buffer and CHANNEL in buffer.lower():
             msg = string.join(string.split(buffer)[3:])[1:]
             print msg
             msgarr = string.split(msg)
