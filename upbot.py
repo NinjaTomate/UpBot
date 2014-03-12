@@ -5,8 +5,9 @@ try:
     SERVER = sys.argv[3]
     NICKNAME = sys.argv[2]
     CHANNEL = '#' + sys.argv[1]
+    OWNER = sys.argv[4]
 except:
-    print "Usage: python upbot.py [channel] [nickname] [server]"
+    print "Usage: python upbot.py [channel] [nickname] [server] [owner nick]"
     sys.exit()
 global COMMANDS
 COMMANDS = []
@@ -79,16 +80,16 @@ def recvloop():
                     commands = commands + item + " "
                 send_data("PRIVMSG %s :Available commands: %s" % (CHANNEL, commands))
 
-            if ".update" in msgarr[0] and user == "TomatoGuy":
+            if ".update" in msgarr[0] and user == OWNER:
                 #output=subprocess.Popen(["svn", "update", "http://localhost/svn/ircbot/trunk", \
                 #    "/home/tomate/Python/Moddable_IRC_Bot/"], stdout=subprocess.PIPE)
                 output=subprocess.Popen(["git", "pull", "git://github.com/NinjaTomate/UpBot.git", "testing"],  stdout=subprocess.PIPE)
                 for PythonIsGreat in output.stdout:
                     print PythonIsGreat
                     send_data("PRIVMSG %s :%s" % (CHANNEL, PythonIsGreat))
-            if ".restart" in msgarr[0] and user == "TomatoGuy":
+            if ".restart" in msgarr[0] and user == OWNER:
                 restart_program()
-            if ".reload" in msgarr[0] and user == "TomatoGuy":
+            if ".reload" in msgarr[0] and user == OWNER:
                 ncount = 0
                 count = 0
                 #global COMMANDS
