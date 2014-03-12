@@ -1,4 +1,4 @@
-import socket, string, os, sys, commands, variables, subprocess
+import socket, string, os, sys, commands, variables, subprocess, re, urllib, json as simplejson
 
 PORT = 6667
 try:
@@ -64,6 +64,14 @@ def recvloop():
             variables.user=user
             if msg == "syntax test\r\n":
                 send_data("PRIVMSG %s :User: %s" % (CHANNEL, user))
+            if re.match(r'https?://(?:www\.)?youtube', msg):
+                yURL = string.split(re.split('(&|\?)v=', msg)[2], '&')[0]
+                url='http://gdata.youtube.com/feeds/api/videos/%s?alt=json&v=2' % yURL
+                json = simplejson.load(urllib.urlopen(url))
+                title = json['entry']['title']['$t']
+                author = json['entry']['author'][0]['name']['$t']
+                send_data("PRIVMSG %s :YouTube: %s - Uploaded by %s" % (CHANNEL, title, author))
+                print "Youtube URL: %s" % yURL
             if ".commands" in msgarr[0]:
                 commands = ""
                 COMMANDS
