@@ -1,5 +1,7 @@
 import socket, string, os, sys, commands, variables, subprocess, re, urllib, json as simplejson, time
 
+reload(sys)
+sys.setdefaultencoding('utf8')
 PORT = 6667
 try:
     SERVER = sys.argv[3]
