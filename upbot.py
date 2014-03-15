@@ -1,4 +1,4 @@
-import socket, string, os, sys, commands, variables, subprocess, re, urllib, json as simplejson
+import socket, string, os, sys, commands, variables, subprocess, re, urllib, json as simplejson, time
 
 PORT = 6667
 try:
@@ -23,6 +23,7 @@ def send_data(command):
     IRC.send(command + '\n')
 
 def join(channel):
+    time.sleep(2)
     send_data("JOIN %s" % channel)
 
 def login(nickname, username=sys.argv[1], password = None, realname=sys.argv[1], hostname='Spurdo', servername='Server'):
