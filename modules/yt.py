@@ -8,6 +8,6 @@ def yt(send_data, msgarr, user):
 		url = "https://gdata.youtube.com/feeds/api/videos?q=%s&alt=json" % query
 		print query
 		json = simplejson.load(urllib.urlopen(url))
-		title = parser.unescape(json['feed']['entry'][0]['link'][0]['href'])
-		url = parser.unescape(json['feed']['entry'][0]['title']['$t']
-		send_data("PRIVMSG %s :%s - %s - %s" % (variables.channel, title, content, url))
+		url = parser.unescape(json['feed']['entry'][0]['link'][0]['href'])
+		title = parser.unescape(json['feed']['entry'][0]['title']['$t'])
+		send_data("PRIVMSG %s :\"%s\" - %s" % (variables.channel, title, content, url))
