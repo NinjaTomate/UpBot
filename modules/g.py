@@ -10,5 +10,5 @@ def g(send_data, msgarr, user):
 		json = simplejson.load(urllib.urlopen(url))
 		content = parser.unescape(json['responseData']['results'][0]['content']).replace("\n", "").replace("<b>", "").replace("</b>", "")
 		title = parser.unescape(json['responseData']['results'][0]['title']).replace("<b>", "").replace("</b>", "")
-		url = parser.unescape(json['responseData']['results'][0]['url'])
+		url = json['responseData']['results'][0]['url']
 		send_data("PRIVMSG %s :%s - %s - %s" % (variables.channel, title, content, url))
