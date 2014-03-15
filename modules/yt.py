@@ -10,4 +10,4 @@ def yt(send_data, msgarr, user):
 		json = simplejson.load(urllib.urlopen(url))
 		url = parser.unescape(json['feed']['entry'][0]['link'][0]['href'])
 		title = parser.unescape(json['feed']['entry'][0]['title']['$t'])
-		send_data("PRIVMSG %s :\"%s\" - %s" % (variables.channel, title, content, url))
+		send_data("PRIVMSG %s :\"%s\" - %s" % (variables.channel, title, url))
