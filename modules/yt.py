@@ -1,6 +1,6 @@
 import variables, urllib, json as simplejson, string, HTMLParser
 def yt(send_data, msgarr, user):
-	if len(msgarr) < 2 in msgarr:
+	if len(msgarr) < 2:
 		send_data("PRIVMSG %s :No or invalid search string supplied." % variables.channel)
 	else:
 		parser = HTMLParser.HTMLParser()
