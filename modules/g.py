@@ -1,5 +1,5 @@
 import variables, urllib2, json
-def isup(send_data, msgarr, user):
+def g(send_data, msgarr, user):
 	if len(msgarr) < 2 or "porn" in msgarr:
 		send_data("PRIVMSG %s :No or invalid search string supplied." % variables.channel)
 	else:
