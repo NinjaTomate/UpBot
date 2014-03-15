@@ -1,4 +1,4 @@
-import variables, urllib2, json
+import variables, urllib2, json as simplejson, string
 def g(send_data, msgarr, user):
 	if len(msgarr) < 2 or "porn" in msgarr:
 		send_data("PRIVMSG %s :No or invalid search string supplied." % variables.channel)
