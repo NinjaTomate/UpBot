@@ -60,7 +60,7 @@ def recvloop():
         print variables.buffer
         if string.split(buffer)[0] == "PING":
             send_data("PRIVMSG %s PONG" % string.split(buffer, ':')[1])
-        if "PRIVMSG" in buffer and CHANNEL in buffer.lower():
+        if "PRIVMSG" in buffer and CHANNEL.lower() in buffer.lower():
             msg = string.join(string.split(buffer)[3:])[1:]
             print msg
             msgarr = string.split(msg)
