@@ -13,6 +13,7 @@ except:
     sys.exit()
 global COMMANDS
 COMMANDS = []
+variables.owner = OWNER
 variables.channel = CHANNEL
 variables.permissions = [line.strip() for line in open('permissions.txt')]
 
@@ -40,7 +41,7 @@ def restart_program():
     python = sys.executable
     os.execl(python, python, * sys.argv)
 def execute(command, user, msgarr):
-    print "Executing vsquare.%s" % command
+    print "Executing %s.%s" % (command, command)
     exec("%s.%s(send_data, msgarr, user)" % (command, command))
 def help(command, user, msgarr):
     print "Executing %s.help()" % command

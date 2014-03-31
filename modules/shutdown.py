@@ -1,5 +1,4 @@
 def shutdown(send_data, msgarr, user):
-	if user == "TomatoGuy":
-		print "aaaaaaaaaaaaaaaaaaa"
+	if user == variables.owner:
 		exec(send_data("QUIT"))
 		sys.exit(1)
