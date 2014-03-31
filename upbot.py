@@ -15,7 +15,6 @@ global COMMANDS
 COMMANDS = []
 variables.owner = OWNER
 variables.channel = CHANNEL
-variables.permissions = [line.strip() for line in open('permissions.txt')]
 
 IRC = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
