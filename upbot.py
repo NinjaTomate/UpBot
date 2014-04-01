@@ -70,8 +70,6 @@ def recvloop():
             msgarr = string.split(msg)
             user = string.split(string.split(buffer, ':')[1], '!')[0]
             variables.user=user
-            if msg == "syntax test\r\n":
-                send_data("PRIVMSG %s :User: %s" % (CHANNEL, user))
             if re.match(r'(.*)https?://(?:www\.)?youtube', msg):
                 try:
                     yURL = string.split(string.split(re.split('(&|\?)v=', msg)[2], '&')[0])[0]
