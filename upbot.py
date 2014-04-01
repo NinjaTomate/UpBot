@@ -32,8 +32,9 @@ def join(channel):
 def login(nickname, username=sys.argv[2], password = None, realname=sys.argv[2], hostname='Spurdo', servername='Server'):
     send_data("USER %s %s %s %s" % (username, hostname, servername, realname))
     send_data("NICK " + nickname)
-    send_data("MODE %s +irx" % nickname)
+    send_data("MODE %s +ir" % nickname)
     if len(NSPW) > 0:
+        time.sleep(2)
         send_data("PRIVMSG NickServ :IDENTIFY %s" % NSPW)
 def restart_program():
     """Restarts the current program.
