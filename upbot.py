@@ -8,7 +8,6 @@ try:
     NICKNAME = sys.argv[2]
     CHANNEL = '#' + sys.argv[1]
     OWNER = sys.argv[4]
-    NSPW = sys.argv[5]
 except:
     print "Usage: python upbot.py [channel] [nickname] [server] [owner nick] [nickserv password (optional)]"
     sys.exit()
@@ -33,9 +32,12 @@ def login(nickname, username=sys.argv[2], password = None, realname=sys.argv[2],
     send_data("USER %s %s %s %s" % (username, hostname, servername, realname))
     send_data("NICK " + nickname)
     send_data("MODE %s +ir" % nickname)
-    if len(NSPW) > 0:
+    try:
+        NSPW = sys.argv[5]
         time.sleep(2)
         send_data("PRIVMSG NickServ :IDENTIFY %s" % NSPW)
+    except:
+        print "No NickServ password supplied."
 def restart_program():
     """Restarts the current program.
     Note: this function does not return. Any cleanup action (like
