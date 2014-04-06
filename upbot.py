@@ -91,8 +91,6 @@ def recvloop():
                 send_data("PRIVMSG %s :Available commands: %s" % (CHANNEL, commands))
 
             if ".update" in msgarr[0] and user == OWNER:
-                #output=subprocess.Popen(["svn", "update", "http://localhost/svn/ircbot/trunk", \
-                #    "/home/tomate/Python/Moddable_IRC_Bot/"], stdout=subprocess.PIPE)
                 output=subprocess.Popen(["git", "pull", "git://github.com/NinjaTomate/UpBot.git", "testing"],  stdout=subprocess.PIPE)
                 for PythonIsGreat in output.stdout:
                     print PythonIsGreat
@@ -102,7 +100,6 @@ def recvloop():
             if ".reload" in msgarr[0] and user == OWNER:
                 ncount = 0
                 count = 0
-                #global COMMANDS
                 oCOMMANDS = COMMANDS
                 COMMANDS = []
                 for item in os.listdir('./modules'):
@@ -140,9 +137,7 @@ def recvloop():
                         print "Found module %s" % command
                         execute(command, user, msgarr)
                         break;
-
-#commands.initial()
-#COMMANDS = commands.COMMANDS
+                        
 for item in os.listdir('./modules'):
     module = string.split(item, '.')[0]
     if not any(module in item for item in COMMANDS) and not module == "__init__":
