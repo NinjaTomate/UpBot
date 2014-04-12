@@ -64,9 +64,24 @@ def recvloop():
         buffer = IRC.recv(1024)
         variables.buffer = buffer
         print variables.buffer
+        print string.split(string.split(buffer, ':')[1], '!')[0]
         if string.split(buffer)[0] == "PING":
             send_data("PRIVMSG %s PONG" % string.split(buffer, ':')[1])
-        if "PRIVMSG" in buffer and CHANNEL.lower() in buffer.lower():
+        if "INVITE" in buffer and string.split(string.split(buffer, ':')[1], '!')[0] == OWNER:
+            channel = string.split(string.join(string.split(buffer)[3:])[1:])[0]
+            send_data("JOIN %s" % channel)
+        if "PRIVMSG" in buffer and string.split(string.split(buffer, ':')[1], '!')[0] == OWNER:
+            msg = string.join(string.split(buffer)[3:])[1:]
+            msg = string.split(msg)
+            if msg[0] == "part":
+                if "#" in msg[1]:
+                    send_data("PART %s" % msg[1])
+                else:
+                    send_data("PART #%s" % msg[1])
+        if "PRIVMSG" in buffer and '#' in string.split(buffer.lower())[2]:
+            msgChan = string.split(buffer.lower())[2]
+            CHANNEL = msgChan
+            variables.channel = CHANNEL
             msg = string.join(string.split(buffer)[3:])[1:]
             print msg
             msgarr = string.split(msg)
