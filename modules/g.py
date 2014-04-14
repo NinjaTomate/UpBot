@@ -17,3 +17,5 @@ def g(send_data, msgarr, user):
 		except:
 			print urllib.urlopen(url)
 			send_data("PRIVMSG %s :Error, you should probably not do that again." % variables.channel)
+def help(send_data):
+	send_data("PRIVMSG %s :Googles for a query. Usage: .g [query]"  % variables.channel)

@@ -15,3 +15,5 @@ def yt(send_data, msgarr, user):
 			send_data("PRIVMSG %s :\"%s\" by %s - %s" % (variables.channel, title, author, url))
 		except:
 			send_data("PRIVMSG %s :No results found or other error." % variables.channel)
+def help(send_data):
+	send_data("PRIVMSG %s :Seaches YouTube for a query. Usage: .yt [query]"  % variables.channel)

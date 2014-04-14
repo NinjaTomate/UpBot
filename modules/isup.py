@@ -12,3 +12,5 @@ def isup(send_data, msgarr, user):
 			send_data("PRIVMSG %s :It's just you, %s is up." % (variables.channel, website))
 		if "interwho" in output:
 			send_data("PRIVMSG %s :Whoops, %s doesn't look like a place on the interwobble!" % (variables.channel, website))
+def help(send_data):
+	send_data("PRIVMSG %s :Checks if a website is up. Usage: .isup [websites]"  % variables.channel)
