@@ -65,12 +65,16 @@ def recvloop():
         variables.buffer = buffer
         print variables.buffer
         print string.split(string.split(buffer, ':')[1], '!')[0]
+        if "VERSION" in buffer:
+            print "Version request received."
+            send_data("NOTICE %s :VERSION Funco Testing" % string.split(string.split(buffer, ':')[1], '!')[0])
         if string.split(buffer)[0] == "PING":
             send_data("PRIVMSG %s PONG" % string.split(buffer, ':')[1])
         if "INVITE" in buffer and string.split(string.split(buffer, ':')[1], '!')[0] == OWNER:
             channel = string.split(string.join(string.split(buffer)[3:])[1:])[0]
             send_data("JOIN %s" % channel)
         if "PRIVMSG" in buffer and string.split(string.split(buffer, ':')[1], '!')[0] == OWNER:
+            send_data("PING %s" % OWNER)
             msg = string.join(string.split(buffer)[3:])[1:]
             msg = string.split(msg)
             if msg[0] == "part":
@@ -78,6 +82,13 @@ def recvloop():
                     send_data("PART %s" % msg[1])
                 else:
                     send_data("PART #%s" % msg[1])
+        #if "PRIVMSG" in buffer and "PING" in buffer:           TODO: Implement ping
+        #    msg = string.join(string.split(buffer)[3:])[1:]          response.
+        #    msgarr = string.split(msg)
+        #    print msgarr
+        #    pingID = msgarr[1].replace("\x01", "")
+        #    send_data("PONG %s :%s" % (string.split(string.split(buffer, ':')[1], '!')[0], pingID))
+
         if "PRIVMSG" in buffer and '#' in string.split(buffer.lower())[2]:
             msgChan = string.split(buffer.lower())[2]
             CHANNEL = msgChan
