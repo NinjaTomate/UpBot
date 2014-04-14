@@ -38,6 +38,7 @@ def login(nickname, username=sys.argv[2], password = None, realname=sys.argv[2],
         send_data("PRIVMSG NickServ :IDENTIFY %s" % NSPW)
     except:
         print "No NickServ password supplied."
+        
 def restart_program():
     """Restarts the current program.
     Note: this function does not return. Any cleanup action (like
@@ -74,7 +75,6 @@ def recvloop():
             channel = string.split(string.join(string.split(buffer)[3:])[1:])[0]
             send_data("JOIN %s" % channel)
         if "PRIVMSG" in buffer and string.split(string.split(buffer, ':')[1], '!')[0] == OWNER:
-            send_data("PING %s" % OWNER)
             msg = string.join(string.split(buffer)[3:])[1:]
             msg = string.split(msg)
             if msg[0] == "part":
@@ -82,12 +82,10 @@ def recvloop():
                     send_data("PART %s" % msg[1])
                 else:
                     send_data("PART #%s" % msg[1])
-        #if "PRIVMSG" in buffer and "PING" in buffer:           TODO: Implement ping
-        #    msg = string.join(string.split(buffer)[3:])[1:]          response.
-        #    msgarr = string.split(msg)
-        #    print msgarr
-        #    pingID = msgarr[1].replace("\x01", "")
-        #    send_data("PONG %s :%s" % (string.split(string.split(buffer, ':')[1], '!')[0], pingID))
+        if "PRIVMSG" in buffer and "PING" in buffer:           
+            msg = string.join(string.split(buffer)[3:])[1:]   
+            sender = string.split(string.split(buffer, ':')[1], '!')[0]
+            send_data("NOTICE %s :%s" % (sender, msg))
 
         if "PRIVMSG" in buffer and '#' in string.split(buffer.lower())[2]:
             msgChan = string.split(buffer.lower())[2]
