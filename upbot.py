@@ -38,7 +38,7 @@ def login(nickname, username=sys.argv[2], password = None, realname=sys.argv[2],
         send_data("PRIVMSG NickServ :IDENTIFY %s" % NSPW)
     except:
         print "No NickServ password supplied."
-        
+
 def restart_program():
     """Restarts the current program.
     Note: this function does not return. Any cleanup action (like
@@ -118,7 +118,7 @@ def recvloop():
                 output=subprocess.Popen(["git", "pull", "git://github.com/NinjaTomate/UpBot.git", "testing"],  stdout=subprocess.PIPE)
                 for PythonIsGreat in output.stdout:
                     print PythonIsGreat
-                    send_data("PRIVMSG %s :%s" % (CHANNEL, PythonIsGreat))
+                    send_data("PRIVMSG %s :%s" % (OWNER, PythonIsGreat))
             if ".restart" in msgarr[0] and user == OWNER:
                 restart_program()
             if ".reload" in msgarr[0] and user == OWNER:
