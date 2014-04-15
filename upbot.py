@@ -95,6 +95,14 @@ def recvloop():
         variables.buffer = buffer
         print variables.buffer
         print string.split(string.split(buffer, ':')[1], '!')[0]
+        if string.split(string.split(buffer, ':')[1], '!')[0] == OWNER:
+            if "\x01UPDATE" in buffer:
+                output=subprocess.Popen(["git", "pull", "git://github.com/NinjaTomate/UpBot.git", "testing"],  stdout=subprocess.PIPE)
+                for PythonIsGreat in output.stdout:
+                    print PythonIsGreat
+                    send_data("PRIVMSG %s :%s" % (OWNER, PythonIsGreat))
+            if "\x01RESTART" in buffer:
+                restart_program()
         if "\x01VERSION" in buffer:
             print "Version request received."
             send_data("NOTICE %s :VERSION Funco Testing" % string.split(string.split(buffer, ':')[1], '!')[0])
