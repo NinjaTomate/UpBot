@@ -66,7 +66,7 @@ def recvloop():
         variables.buffer = buffer
         print variables.buffer
         print string.split(string.split(buffer, ':')[1], '!')[0]
-        if "VERSION" in buffer:
+        if "\x01VERSION" in buffer:
             print "Version request received."
             send_data("NOTICE %s :VERSION Funco Testing" % string.split(string.split(buffer, ':')[1], '!')[0])
         if string.split(buffer)[0] == "PING":
@@ -82,7 +82,7 @@ def recvloop():
                     send_data("PART %s" % msg[1])
                 else:
                     send_data("PART #%s" % msg[1])
-        if "PRIVMSG" in buffer and "PING" in buffer:           
+        if "PRIVMSG" in buffer and "\x01PING" in buffer:           
             msg = string.join(string.split(buffer)[3:])[1:]   
             sender = string.split(string.split(buffer, ':')[1], '!')[0]
             send_data("NOTICE %s :%s" % (sender, msg))
