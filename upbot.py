@@ -67,7 +67,10 @@ def reloadReggie():
         module = string.split(item, '.')[0]
         #print module
         if not "__init__" in module and not any (module in item for item in variables.regexes):
-            ohmygoddoit("import regexes.%s as %s" % (module, module))
+            try:
+                ohmygoddoit("%s = reload(%s)" % (module, module))
+            except:
+                ohmygoddoit("import regexes.%s as %s" % (module, module))
             ohmygoddoit("variables.regexes.append(%s.setup())" % module)
     print variables.regexes
 def execute(command, user, msgarr):
