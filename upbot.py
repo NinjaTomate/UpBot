@@ -12,6 +12,19 @@ except:
     print "Usage: python upbot.py [channel] [nickname] [server] [owner nick] [nickserv password (optional)]"
     sys.exit()
 global COMMANDS
+
+
+
+######################THIS MAY BREAK EVERYHTING##########################
+variables.regexes = []
+for item in os.listdir('./regexes'):
+    module = string.split(item, '.')[0]
+    #print module
+    if not "__init__" in module and not any (module in item for item in variables.regexes):
+        exec("import regexes.%s as %s" % (module, module))
+        exec("variables.regexes.append(%s.setup())" % module)
+#########################################################################
+#print variables.regexes
 COMMANDS = []
 variables.owner = OWNER
 variables.channel = CHANNEL
@@ -46,6 +59,17 @@ def restart_program():
     send_data("QUIT")
     python = sys.executable
     os.execl(python, python, * sys.argv)
+def ohmygoddoit(jesuschrist):
+    exec(jesuschrist)
+def reloadReggie():
+    variables.regexes = []
+    for item in os.listdir('./regexes'):
+        module = string.split(item, '.')[0]
+        #print module
+        if not "__init__" in module and not any (module in item for item in variables.regexes):
+            ohmygoddoit("import regexes.%s as %s" % (module, module))
+            ohmygoddoit("variables.regexes.append(%s.setup())" % module)
+    print variables.regexes
 def execute(command, user, msgarr):
     print "Executing %s.%s" % (command, command)
     exec("%s.%s(send_data, msgarr, user)" % (command, command))
@@ -59,6 +83,8 @@ def reloader(module):
     exec("%s = reload(%s)" % (module, module))
 def loader(module):
     exec("import modules.%s as %s" % (module, module)) in globals()
+def pleaseDoIt(item, msg, send_data):
+    exec(item)
 def recvloop():
     global COMMANDS
     while (1):
@@ -92,21 +118,25 @@ def recvloop():
             CHANNEL = msgChan
             variables.channel = CHANNEL
             msg = string.join(string.split(buffer)[3:])[1:]
+            for item in variables.regexes:
+                if "if" in item:
+                    #print item
+                    pleaseDoIt(item, msg, send_data)
             print msg
             msgarr = string.split(msg)
             user = string.split(string.split(buffer, ':')[1], '!')[0]
             variables.user=user
-            if re.match(r'(.*)https?://(?:www\.)?youtube', msg):
-                try:
-                    yURL = string.split(string.split(re.split('(&|\?)v=', msg)[2], '&')[0])[0]
-                    url='http://gdata.youtube.com/feeds/api/videos/%s?alt=json&v=2' % yURL
-                    json = simplejson.load(urllib.urlopen(url))
-                    title = json['entry']['title']['$t']
-                    author = json['entry']['author'][0]['name']['$t']
-                    send_data("PRIVMSG %s :YouTube: %s - Uploaded by %s" % (CHANNEL, title, author))
-                    print "Youtube URL: %s" % yURL
-                except:
-                    send_data("PRIVMSG %s :Error, is the URL broken?" % CHANNEL)
+            #if re.match(r'(.*)https?://(?:www\.)?youtube', msg):
+            #    try:
+            #        yURL = string.split(string.split(re.split('(&|\?)v=', msg)[2], '&')[0])[0]
+            #        url='http://gdata.youtube.com/feeds/api/videos/%s?alt=json&v=2' % yURL
+            #        json = simplejson.load(urllib.urlopen(url))
+            #        title = json['entry']['title']['$t']
+            #        author = json['entry']['author'][0]['name']['$t']
+            #        send_data("PRIVMSG %s :YouTube: %s - Uploaded by %s" % (CHANNEL, title, author))
+            #        print "Youtube URL: %s" % yURL
+            #    except:
+            #        send_data("PRIVMSG %s :Error, is the URL broken?" % CHANNEL)
             if ".commands" in msgarr[0]:
                 commands = ""
                 COMMANDS
@@ -122,6 +152,7 @@ def recvloop():
             if ".restart" in msgarr[0] and user == OWNER:
                 restart_program()
             if ".reload" in msgarr[0] and user == OWNER:
+                reloadReggie()
                 ncount = 0
                 count = 0
                 oCOMMANDS = COMMANDS
