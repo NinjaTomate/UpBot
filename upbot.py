@@ -112,13 +112,14 @@ def recvloop():
             channel = string.split(string.join(string.split(buffer)[3:])[1:])[0]
             send_data("JOIN %s" % channel)
         if "PRIVMSG" in buffer and string.split(string.split(buffer, ':')[1], '!')[0] == OWNER:
-            msg = string.join(string.split(buffer)[3:])[1:]
-            msg = string.split(msg)
-            if msg[0] == "part":
-                if "#" in msg[1]:
-                    send_data("PART %s" % msg[1])
-                else:
-                    send_data("PART #%s" % msg[1])
+            if not ": " in buffer:
+                msg = string.join(string.split(buffer)[3:])[1:]
+                msg = string.split(msg)
+                if msg[0] == "part":
+                    if "#" in msg[1]:
+                        send_data("PART %s" % msg[1])
+                    else:
+                        send_data("PART #%s" % msg[1])
         if "PRIVMSG" in buffer and "\x01PING" in buffer:           
             msg = string.join(string.split(buffer)[3:])[1:]   
             sender = string.split(string.split(buffer, ':')[1], '!')[0]
@@ -135,6 +136,10 @@ def recvloop():
                     pleaseDoIt(item, msg, send_data)
             print msg
             msgarr = string.split(msg)
+            try:
+                print msgarr[0]
+            except:
+                msgarr = string.split("This string magically prevents crashing.")
             user = string.split(string.split(buffer, ':')[1], '!')[0]
             variables.user=user
             #if re.match(r'(.*)https?://(?:www\.)?youtube', msg):
