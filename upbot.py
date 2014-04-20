@@ -125,8 +125,12 @@ def recvloop():
             sender = string.split(string.split(buffer, ':')[1], '!')[0]
             send_data("NOTICE %s :%s" % (sender, msg))
 
-        if "PRIVMSG" in buffer and '#' in string.split(buffer.lower())[2]:
-            msgChan = string.split(buffer.lower())[2]
+        if "PRIVMSG" in buffer:
+            user = string.split(string.split(buffer, ':')[1], '!')[0]
+            if '#' in string.split(buffer.lower())[2]:
+                msgChan = string.split(buffer.lower())[2]
+            else:
+                msgChan = user
             CHANNEL = msgChan
             variables.channel = CHANNEL
             msg = string.join(string.split(buffer)[3:])[1:]
@@ -140,7 +144,6 @@ def recvloop():
                 print msgarr[0]
             except:
                 msgarr = string.split("This string magically prevents crashing.")
-            user = string.split(string.split(buffer, ':')[1], '!')[0]
             variables.user=user
             #if re.match(r'(.*)https?://(?:www\.)?youtube', msg):
             #    try:
