@@ -1,5 +1,5 @@
 import variables, urllib, json as simplejson, string, HTMLParser
-def np(send_data, msgarr, user):
+def play(send_data, msgarr, user):
 	if len(msgarr) < 2:
 		send_data("PRIVMSG %s :No or invalid search string supplied." % variables.channel)
 	else:
