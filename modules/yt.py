@@ -1,4 +1,4 @@
-import variables, urllib, json as simplejson, string, HTMLParser
+import re, variables, urllib, json as simplejson, string, HTMLParser
 def yt(send_data, msgarr, user):
 	if len(msgarr) < 2:
 		send_data("PRIVMSG %s :No or invalid search string supplied." % variables.channel)
@@ -10,6 +10,7 @@ def yt(send_data, msgarr, user):
 			print query
 			json = simplejson.load(urllib.urlopen(url))
 			url = parser.unescape(json['feed']['entry'][0]['link'][0]['href'])
+			url = "https://youtu.be/" + re.split(r'((\?|&)?(v=|\.be/)|&)', url)[4]
 			title = parser.unescape(json['feed']['entry'][0]['title']['$t'])
 			author = parser.unescape(json['feed']['entry'][0]['author'][0]['name']['$t'])
 			send_data("PRIVMSG %s :\"%s\" by %s - %s" % (variables.channel, title, author, url))
