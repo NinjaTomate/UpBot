@@ -6,7 +6,7 @@ def play(send_data, msgarr, user):
 		try:
 			playurl=""
 			parser = HTMLParser.HTMLParser()
-			query=string.join(msgarr)[4:]
+			query=string.join(msgarr)[6:]
 			url = "http://ws.audioscrobbler.com/2.0/?method=user.getrecenttracks&user=%s&api_key=112d55ba79c51c8509a4ef500716165f&limit=1&format=json" % query
 			print query
 			json = simplejson.load(urllib.urlopen(url))
