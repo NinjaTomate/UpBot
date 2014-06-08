@@ -62,17 +62,27 @@ def restart_program():
 def ohmygoddoit(jesuschrist):
     exec(jesuschrist)
 def reloadReggie():
+    new = 0
+    reloaded = 0
     variables.regexes = []
     for item in os.listdir('./regexes'):
-        module = string.split(item, '.')[0]
-        #print module
-        if not "__init__" in module and not any (module in item for item in variables.regexes):
+        if not "pyc" in item:
+            module = string.split(item, '.')[0]
+        else:
+            module = "INVALID"
+        if not "__init__" in module and module != "INVALID":
             try:
                 ohmygoddoit("%s = reload(%s)" % (module, module))
+                reloaded += 1
             except:
                 ohmygoddoit("import regexes.%s as %s" % (module, module))
+                new += 1
             ohmygoddoit("variables.regexes.append(%s.setup())" % module)
     print variables.regexes
+    if reloaded > 0:
+        send_data("PRIVMSG %s :Reloaded %s Regex modules." % (CHANNEL, reloaded))
+    if new > 0:
+        send_data("PRIVMSG %s :Loaded %s new Regex modules." % (CHANNEL, new))
 def execute(command, user, msgarr):
     print "Executing %s.%s" % (command, command)
     exec("%s.%s(send_data, msgarr, user)" % (command, command))
