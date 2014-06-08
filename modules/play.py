@@ -11,8 +11,12 @@ def play(send_data, msgarr, user):
 			print query
 			json = simplejson.load(urllib.urlopen(url))
 			print json
-			artist = parser.unescape(json['recenttracks']['track'][0]['artist']['#text'])
-			title = parser.unescape(json['recenttracks']['track'][0]['name'])
+			try:
+				artist = parser.unescape(json['recenttracks']['track'][0]['artist']['#text'])
+				title = parser.unescape(json['recenttracks']['track'][0]['name'])
+			except:
+				artist = parser.unescape(json['recenttracks']['track']['artist']['#text'])
+				title = parser.unescape(json['recenttracks']['track']['name'])
 			print artist
 			url = "http://ws.spotify.com/search/1/track.json?q="
 			query = "%s %s" % (artist, title)
@@ -29,6 +33,6 @@ def play(send_data, msgarr, user):
 			send_data("PRIVMSG %s :%s: %s" % (variables.channel, user, playurl))
 		except Exception as e:
 			print e
-			send_data("PRIVMSG %s :%s" % (variables.channel, e))
+			send_data("PRIVMSG %s :%s" % (variables.channel, "An error happened."))
 def help(send_data):
 	send_data("PRIVMSG %s :Links user's currently playing song. Usage: .play [lastfm user]"  % variables.channel)
