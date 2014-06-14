@@ -3,6 +3,7 @@ import socket, string, os, sys, commands, variables, subprocess, re, urllib, jso
 reload(sys)
 sys.setdefaultencoding('utf8')
 PORT = 6667
+
 try:
     SERVER = sys.argv[3]
     NICKNAME = sys.argv[2]
@@ -11,23 +12,14 @@ try:
 except:
     print "Usage: python upbot.py [channel] [nickname] [server] [owner nick] [nickserv password (optional)]"
     sys.exit()
+
 global COMMANDS
 
-
-
-######################THIS MAY BREAK EVERYHTING##########################
-variables.regexes = []
-for item in os.listdir('./regexes'):
-    module = string.split(item, '.')[0]
-    #print module
-    if not "__init__" in module and not any (module in item for item in variables.regexes):
-        exec("import regexes.%s as %s" % (module, module))
-        exec("variables.regexes.append(%s.setup())" % module)
-#########################################################################
-#print variables.regexes
 COMMANDS = []
 variables.owner = OWNER
 variables.channel = CHANNEL
+variables.regexes = []
+variables.debuglevel = 0
 
 IRC = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
@@ -41,10 +33,11 @@ def join(channel):
     time.sleep(2)
     send_data("JOIN %s" % channel)
 
-def login(nickname, username=sys.argv[2], password = None, realname=sys.argv[2], hostname='Spurdo', servername='Server'):
+def login(nickname, username = NICKNAME, password = None, realname = NICKNAME, hostname = "Spurdo", servername = "Server"):
     send_data("USER %s %s %s %s" % (username, hostname, servername, realname))
     send_data("NICK " + nickname)
     send_data("MODE %s +ir" % nickname)
+
     try:
         NSPW = sys.argv[5]
         time.sleep(2)
@@ -53,23 +46,24 @@ def login(nickname, username=sys.argv[2], password = None, realname=sys.argv[2],
         print "No NickServ password supplied."
 
 def restart_program():
-    """Restarts the current program.
-    Note: this function does not return. Any cleanup action (like
-    saving data) must be done before calling this function."""
     send_data("QUIT")
     python = sys.executable
     os.execl(python, python, * sys.argv)
+
 def ohmygoddoit(jesuschrist):
     exec(jesuschrist)
+
 def reloadReggie():
     new = 0
     reloaded = 0
     variables.regexes = []
-    for item in os.listdir('./regexes'):
+
+    for item in os.listdir("./regexes"):
         if not "pyc" in item:
             module = string.split(item, '.')[0]
         else:
             module = "INVALID"
+
         if not "__init__" in module and module != "INVALID":
             try:
                 ohmygoddoit("%s = reload(%s)" % (module, module))
@@ -77,50 +71,67 @@ def reloadReggie():
             except:
                 ohmygoddoit("import regexes.%s as %s" % (module, module))
                 new += 1
+
             ohmygoddoit("variables.regexes.append(%s.setup())" % module)
-    print variables.regexes
+
+    debug(variables.regexes)
+
     if reloaded > 0:
         send_data("PRIVMSG %s :Reloaded %s Regex modules." % (CHANNEL, reloaded))
+
     if new > 0:
         send_data("PRIVMSG %s :Loaded %s new Regex modules." % (CHANNEL, new))
+
 def execute(command, user, msgarr):
-    print "Executing %s.%s" % (command, command)
+    debug("Executing %s.%s" % (command, command))
     exec("%s.%s(send_data, msgarr, user)" % (command, command))
+
 def help(command, user, msgarr):
-    print "Executing %s.help()" % command
+    debug("Executing %s.help()" % command)
     try:
         exec("%s.help(send_data)" % command)
     except:
         send_data("PRIVMSG %s :No help available." % CHANNEL)
+
 def reloader(module):
     exec("%s = reload(%s)" % (module, module))
+
 def loader(module):
     exec("import modules.%s as %s" % (module, module)) in globals()
+
 def pleaseDoIt(item, msg, send_data):
     exec(item)
+
 def recvloop():
     global COMMANDS
+
     while (1):
         buffer = IRC.recv(1024)
         variables.buffer = buffer
-        print variables.buffer
-        print string.split(string.split(buffer, ':')[1], '!')[0]
+        debug(variables.buffer,0)
+        debug(string.split(string.split(buffer, ':')[1], '!')[0])
+
         if string.split(string.split(buffer, ':')[1], '!')[0] == OWNER:
             if "\x01UPDATE" in buffer:
-                output=subprocess.Popen(["git", "pull", "git://github.com/NinjaTomate/UpBot.git", "testing"],  stdout=subprocess.PIPE)
+                output=subprocess.Popen(["git", "pull", "git://github.com/NinjaTomate/UpBot.git", "testing"], stdout = subprocess.PIPE)
                 for PythonIsGreat in output.stdout:
-                    print PythonIsGreat
+                    debug(PythonIsGreat)
                     send_data("PRIVMSG %s :%s" % (OWNER, PythonIsGreat))
+
             if "\x01RESTART" in buffer:
                 restart_program()
+
         if "\x01VERSION" in buffer:
-            print "Version request received."
+            debug("Version request received.")
             send_data("NOTICE %s :VERSION Funco Testing" % string.split(string.split(buffer, ':')[1], '!')[0])
+
         if string.split(buffer)[0] == "PING":
             send_data("PRIVMSG %s PONG" % string.split(buffer, ':')[1])
+
         if "INVITE" in buffer and string.split(string.split(buffer, ':')[1], '!')[0] == OWNER:
             channel = string.split(string.join(string.split(buffer)[3:])[1:])[0]
             send_data("JOIN %s" % channel)
+
         if "PRIVMSG" in buffer and string.split(string.split(buffer, ':')[1], '!')[0] == OWNER:
             if not ": " in buffer:
                 msg = string.join(string.split(buffer)[3:])[1:]
@@ -130,53 +141,54 @@ def recvloop():
                         send_data("PART %s" % msg[1])
                     else:
                         send_data("PART #%s" % msg[1])
-        if "PRIVMSG" in buffer and "\x01PING" in buffer:           
-            msg = string.join(string.split(buffer)[3:])[1:]   
+
+        if "PRIVMSG" in buffer and "\x01PING" in buffer:
+            msg = string.join(string.split(buffer)[3:])[1:]
             sender = string.split(string.split(buffer, ':')[1], '!')[0]
             send_data("NOTICE %s :%s" % (sender, msg))
 
         if "PRIVMSG" in buffer:
             user = string.split(string.split(buffer, ':')[1], '!')[0]
+
             if '#' in string.split(buffer.lower())[2]:
                 msgChan = string.split(buffer.lower())[2]
             else:
                 msgChan = user
+
             CHANNEL = msgChan
             variables.channel = CHANNEL
             msg = string.join(string.split(buffer)[3:])[1:]
+
             for item in variables.regexes:
                 if "if" in item:
-                    #print item
+                    debug(item, 2)
                     pleaseDoIt(item, msg, send_data)
-            print msg
+
+                debug(msg)
             msgarr = string.split(msg)
+
             try:
-                print msgarr[0]
+                debug(msgarr[0])
             except:
                 msgarr = string.split("This string magically prevents crashing.")
-            variables.user=user
-            #if re.match(r'(.*)https?://(?:www\.)?youtube', msg):
-            #    try:
-            #        yURL = string.split(string.split(re.split('(&|\?)v=', msg)[2], '&')[0])[0]
-            #        url='http://gdata.youtube.com/feeds/api/videos/%s?alt=json&v=2' % yURL
-            #        json = simplejson.load(urllib.urlopen(url))
-            #        title = json['entry']['title']['$t']
-            #        author = json['entry']['author'][0]['name']['$t']
-            #        send_data("PRIVMSG %s :YouTube: %s - Uploaded by %s" % (CHANNEL, title, author))
-            #        print "Youtube URL: %s" % yURL
-            #    except:
-            #        send_data("PRIVMSG %s :Error, is the URL broken?" % CHANNEL)
+
+            variables.user = user
+
             if ".commands" in msgarr[0]:
                 commands = ""
                 COMMANDS
+
                 for item in COMMANDS:
                     commands = commands + item + " "
+
                 send_data("PRIVMSG %s :Available commands: %s" % (CHANNEL, commands))
 
             if ".update" in msgarr[0] and user == OWNER:
-                output=subprocess.Popen(["git", "pull", "git://github.com/NinjaTomate/UpBot.git", "testing"],  stdout=subprocess.PIPE)
+                output = subprocess.Popen(["git", "pull", "git://github.com/NinjaTomate/UpBot.git", "testing"],  stdout = subprocess.PIPE)
+
                 for PythonIsGreat in output.stdout:
-                    print PythonIsGreat
+                    debug(PythonIsGreat)
+
                     send_data("PRIVMSG %s :%s" % (OWNER, PythonIsGreat))
             if ".restart" in msgarr[0] and user == OWNER:
                 restart_program()
@@ -186,7 +198,7 @@ def recvloop():
                 count = 0
                 oCOMMANDS = COMMANDS
                 COMMANDS = []
-                for item in os.listdir('./modules'):
+                for item in os.listdir("./modules"):
                     module = string.split(item, '.')[0]
                     if not any(module in item for item in COMMANDS) and not module == "__init__":
                         if not any(module in item for item in oCOMMANDS) and not module == "__init__":
@@ -201,33 +213,47 @@ def recvloop():
                     send_data("PRIVMSG %s :Successfully loaded %s new modules." % (CHANNEL, ncount))
                 send_data("PRIVMSG %s :Successfully reloaded %s modules." % (CHANNEL, count))
             elif ".help" in msgarr[0]:
-                print "Help command used."
+                debug("Help command used.")
+
                 try:
                     for COMMAND in COMMANDS:
                         command =msgarr[1]
-                        print "%s = %s?" % (command, COMMAND)
+                        debug("%s = %s?" % (command, COMMAND))
+
                         if command == COMMAND:
-                            print "Found module %s" % command
+                            debug("Found module %s" % command)
+
                             help(command, user, msgarr)
                             break;
                 except:
                     send_data("PRIVMSG %s :%s" % (CHANNEL, "Please supply a module."))
             elif "." in msgarr[0]:
-                print "Command detected."
+                debug("Command detected.")
+
                 for COMMAND in COMMANDS:
                     command = (string.split(string.split(msgarr[0], '.')[1], "\r\n"))[0]
-                    print "%s = %s?" % (command, COMMAND)
+                    debug("%s = %s?" % (command, COMMAND))
+
                     if command == COMMAND:
-                        print "Found module %s" % command
+                        debug("Found module %s" % command)
                         execute(command, user, msgarr)
                         break;
-                        
+
 for item in os.listdir('./modules'):
     module = string.split(item, '.')[0]
-    if not any(module in item for item in COMMANDS) and not module == "__init__":
+    if not module == "__init__" and not any(module in item for item in COMMANDS):
         exec("import modules.%s as %s" % (module, module))
         COMMANDS.append(module)
-print COMMANDS
+
+for item in os.listdir('./regexes'):
+    module = string.split(item, '.')[0]
+    debug(module, 2)
+    if not "__init__" in module and not any (module in item for item in variables.regexes):
+        exec("import regexes.%s as %s" % (module, module))
+        exec("variables.regexes.append(%s.setup())" % module)
+
+debug(COMMANDS)
+
 irc_conn()
 login(NICKNAME)
 join(CHANNEL)
