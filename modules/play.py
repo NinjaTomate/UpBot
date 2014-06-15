@@ -1,13 +1,19 @@
-import variables, urllib, json as simplejson, string, HTMLParser
+import variables, urllib, json as simplejson, string, HTMLParser, os
 
 def play(send_data, msgarr, user):
     if len(msgarr) < 2:
-        send_data("PRIVMSG %s :No or invalid search string supplied." % variables.channel)
+        lastfm = simplejson.load(open("lastfm.json", "r"))
+        if user in lastfm:
+            username = lastfm[user]
+        else:
+            send_data("PRIVMSG %s :No or invalid search string supplied." % variables.channel)
     else:
+        username = string.join(msgarr)[6:]
+    if username != "":
+        query = username
         try:
             playurl = ""
             parser = HTMLParser.HTMLParser()
-            query = string.join(msgarr)[6:]
             url = "http://ws.audioscrobbler.com/2.0/?method=user.getrecenttracks&user=%s&api_key=%s&limit=1&format=json" % (query, variables.lastFMKey)
             variables.debug(query, 3)
             json = simplejson.load(urllib.urlopen(url))
