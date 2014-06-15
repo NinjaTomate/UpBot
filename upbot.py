@@ -1,4 +1,5 @@
 import socket, string, os, sys, commands, variables, subprocess, re, urllib, json as simplejson, time
+from threading import Thread
 
 reload(sys)
 sys.setdefaultencoding('utf8')
@@ -60,6 +61,7 @@ variables.regexes = []
 variables.debuglevel = 3
 variables.owner = OWNER
 variables.channel = CHANNEL
+variables.nickname = NICKNAME
 
 IRC = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
@@ -88,6 +90,11 @@ def restart_program():
     send_data("QUIT")
     python = sys.executable
     os.execl(python, python, * sys.argv)
+
+def postpls():
+    while(True):
+        ech = raw_input()
+        send_data(ech)
 
 def ohmygoddoit(jesuschrist):
     exec(jesuschrist)
@@ -123,7 +130,9 @@ def reloadReggie():
 
 def execute(command, user, msgarr):
     variables.debug("Executing %s.%s" % (command, command))
-    exec("%s.%s(send_data, msgarr, user)" % (command, command))
+    exec("commandthread = Thread(target = %s.%s, args=(send_data, msgarr, user))" % (command, command))
+    commandthread.start()
+    #exec("%s.%s(send_data, msgarr, user)" % (command, command))
 
 def help(command, user, msgarr):
     variables.debug("Executing %s.help()" % command)
@@ -148,9 +157,13 @@ def recvloop():
     while (1):
         buffer = IRC.recv(1024)
         variables.buffer = buffer
+        print buffer
         variables.debug(variables.buffer,0)
         variables.debug(string.split(string.split(buffer, ':')[1], '!')[0])
-
+        for item in variables.regexes:
+                #if "if" in item:
+                variables.debug(item, 2)
+                pleaseDoIt(item, buffer, send_data)
         if string.split(string.split(buffer, ':')[1], '!')[0] == OWNER:
             if "\x01UPDATE" in buffer:
                 output = subprocess.Popen(["git", "pull", "git://github.com/NinjaTomate/UpBot.git", "testing"], stdout = subprocess.PIPE)
@@ -206,10 +219,7 @@ def recvloop():
             msgarr = string.split(msg)
             variables.debug(re.sub('\n','',msg))
 
-            for item in variables.regexes:
-                if "if" in item:
-                    variables.debug(item, 2)
-                    pleaseDoIt(item, msg, send_data)
+            
 
             try:
                 variables.debug(msgarr[0])
@@ -295,6 +305,11 @@ for item in os.listdir('./modules'):
         exec("import modules.%s as %s" % (module, module))
         COMMANDS.append(module)
 
+variables.debug(COMMANDS)
+
+irc_conn()
+login()
+join(CHANNEL)
 for item in os.listdir('./regexes'):
     module = string.split(item, '.')[0]
     variables.debug(module, 2)
@@ -302,10 +317,7 @@ for item in os.listdir('./regexes'):
     if not "__init__" in module and not any (module in item for item in variables.regexes):
         exec("import regexes.%s as %s" % (module, module))
         exec("variables.regexes.append(%s.setup())" % module)
-
-variables.debug(COMMANDS)
-
-irc_conn()
-login()
-join(CHANNEL)
-recvloop()
+thread = Thread(target = recvloop)
+inputthread = Thread(target = postpls)
+inputthread.start()
+thread.start()
