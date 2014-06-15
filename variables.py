@@ -1,3 +1,5 @@
+debuglevel = 0
+
 def debug(text, level = 1):
-    if (level <= variables.debuglevel):
+    if (level <= debuglevel):
         print(text)
