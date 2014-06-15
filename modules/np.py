@@ -33,4 +33,4 @@ def np(send_data, msgarr, user):
 			print e
 			send_data("PRIVMSG %s :%s" % (variables.channel, "I just broke. Pester Spacecode about it."))
 def help(send_data):
-	send_data("PRIVMSG %s :Seaches YouTube for a query. Usage: .yt [query]"  % variables.channel)
+	send_data("PRIVMSG %s :Displays user's currently playing song. Usage: .np [lastfm username (optional)]"  % variables.channel)
