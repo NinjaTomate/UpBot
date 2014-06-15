@@ -304,9 +304,8 @@ for item in os.listdir('./regexes'):
         exec("variables.regexes.append(%s.setup())" % module)
 
 variables.debug(COMMANDS)
-'''
+
 irc_conn()
 login()
 join(CHANNEL)
 recvloop()
-'''
