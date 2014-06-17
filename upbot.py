@@ -58,7 +58,7 @@ if (NICKPASS == "" or NICKPASS == ''):
 global COMMANDS
 COMMANDS = []
 variables.regexes = []
-variables.debuglevel = 3
+variables.debuglevel = 1
 variables.owner = OWNER
 variables.channel = CHANNEL
 variables.nickname = NICKNAME
@@ -219,8 +219,6 @@ def recvloop():
             msgarr = string.split(msg)
             variables.debug(re.sub('\n','',msg))
 
-            
-
             try:
                 variables.debug(msgarr[0])
             except:
@@ -257,6 +255,7 @@ def recvloop():
 
                 for item in os.listdir("./modules"):
                     module = string.split(item, '.')[0]
+
                     if not any(module in item for item in COMMANDS) and module != "__init__":
                         if not any(module in item for item in oCOMMANDS) and module != "__init__":
                             COMMANDS.append(module)
@@ -266,6 +265,7 @@ def recvloop():
                             COMMANDS.append(module)
                             count = count + 1
                             reloader(module)
+
                 if ncount > 0:
                     send_data("PRIVMSG %s :Successfully loaded %s new modules." % (CHANNEL, ncount))
 
@@ -310,6 +310,7 @@ variables.debug(COMMANDS)
 irc_conn()
 login()
 join(CHANNEL)
+
 for item in os.listdir('./regexes'):
     module = string.split(item, '.')[0]
     variables.debug(module, 2)
@@ -317,7 +318,9 @@ for item in os.listdir('./regexes'):
     if not "__init__" in module and not any (module in item for item in variables.regexes):
         exec("import regexes.%s as %s" % (module, module))
         exec("variables.regexes.append(%s.setup())" % module)
+
 thread = Thread(target = recvloop)
 inputthread = Thread(target = postpls)
+inputthread.daemon = True
 inputthread.start()
 thread.start()
