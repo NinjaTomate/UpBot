@@ -3,7 +3,7 @@ import variables, urllib, json as simplejson, string, HTMLParser
 def g(send_data, msgarr, user, perms):
     if len(msgarr) < 2 or "porn" in msgarr:
         send_data("PRIVMSG %s :No or invalid search string supplied." % variables.channel)
-    elif int(perms) < 999:
+    elif int(perms) < 10:
         send_data("NOTICE %s :Check your privilege." % user)
     else:
         parser = HTMLParser.HTMLParser()
