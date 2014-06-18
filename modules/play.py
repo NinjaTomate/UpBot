@@ -1,6 +1,6 @@
 import variables, urllib, json as simplejson, string, HTMLParser, os
 
-def play(send_data, msgarr, user):
+def play(send_data, msgarr, user, perms):
     if len(msgarr) < 2:
         lastfm = simplejson.load(open("lastfm.json", "r"))
         if user in lastfm:

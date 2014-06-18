@@ -55,6 +55,20 @@ if (PASSWORD == "" or PASSWORD == ''):
 if (NICKPASS == "" or NICKPASS == ''):
     NICKPASS = None
 
+accounts = {}
+if os.path.isfile("accounts.json"):
+    try:
+        accounts = simplejson.load(open("accounts.json", 'r'))
+    except:
+        print "Syntax error in accounts.json"
+
+if not OWNER in accounts:
+    accounts[OWNER] = {}
+    accfile = open("accounts.json", "w")
+    accounts[OWNER]['perms'] = 999
+    simplejson.dump(accounts, accfile)
+    accfile.close()
+    
 global COMMANDS
 COMMANDS = []
 variables.regexes = []
@@ -94,6 +108,8 @@ def restart_program():
 def postpls():
     while(True):
         ech = raw_input()
+        if ech == "suicide":
+            sys.exit()
         send_data(ech)
 
 def ohmygoddoit(jesuschrist):
@@ -128,9 +144,9 @@ def reloadReggie():
     if new > 0:
         send_data("PRIVMSG %s :Loaded %s new Regex modules." % (CHANNEL, new))
 
-def execute(command, user, msgarr):
+def execute(command, user, msgarr, perms):
     variables.debug("Executing %s.%s" % (command, command))
-    exec("commandthread = Thread(target = %s.%s, args=(send_data, msgarr, user))" % (command, command))
+    exec("commandthread = Thread(target = %s.%s, args=(send_data, msgarr, user, perms))" % (command, command))
     commandthread.start()
     #exec("%s.%s(send_data, msgarr, user)" % (command, command))
 
@@ -153,13 +169,45 @@ def pleaseDoIt(item, msg, send_data):
 
 def recvloop():
     global COMMANDS
-
+    MOTD = True
     while (1):
         buffer = IRC.recv(1024)
         variables.buffer = buffer
-        print buffer
-        variables.debug(variables.buffer,0)
-        variables.debug(string.split(string.split(buffer, ':')[1], '!')[0])
+        mode = string.split(buffer)[1]
+        user = ""
+        #print mode
+        #print buffer
+        if "376" in buffer:
+            MOTD = False
+        if "PRIVMSG" in mode or "NOTICE" in mode:
+            try:
+                user = string.split(string.split(buffer, ':')[1], '!')[0]
+            except:
+                user = ""
+            if not (re.match(r'^(Global|peer|py-ctcp|.*\..*)$', user)):
+                #variables.debug(user)
+                "install gentoo"
+            else:
+                user = ""
+        if user != "":
+            accounts = simplejson.load(open("accounts.json", 'r'))
+            if user in accounts:
+               perms = accounts[user]['perms']
+            else:
+                variables.debug("Error: User not in accounts.json", 1)
+                perms = 0
+                accfile = open("accounts.json", 'w')
+                accounts[user] = {}
+                accounts[user]['perms'] = perms
+                simplejson.dump(accounts, accfile)
+                accfile.close()
+        if not MOTD:
+            try:
+                variables.debug("<%s> %s" % (user, string.split(buffer, ':')[2]))
+            except:
+                variables.debug(buffer)
+        #variables.debug(variables.buffer,30)
+        #variables.debug(string.split(string.split(buffer, ':')[1], '!')[0])
         for item in variables.regexes:
                 #if "if" in item:
                 variables.debug(item, 2)
@@ -217,10 +265,11 @@ def recvloop():
             variables.channel = CHANNEL
             msg = string.join(string.split(buffer)[3:])[1:]
             msgarr = string.split(msg)
-            variables.debug(re.sub('\n','',msg))
+            #variables.debug(re.sub('\n','',msg))
 
             try:
-                variables.debug(msgarr[0])
+                #variables.debug(msgarr[0])
+                "ech"
             except:
                 msgarr = string.split("This string magically prevents crashing.")
 
@@ -286,16 +335,15 @@ def recvloop():
                             break;
                 except:
                     send_data("PRIVMSG %s :%s" % (CHANNEL, "Please supply a module."))
-            elif "." in msgarr[0]:
+            elif "." in msgarr[0][0]:
                 variables.debug("Command detected.")
-
                 for COMMAND in COMMANDS:
                     command = (string.split(string.split(msgarr[0], '.')[1], "\r\n"))[0]
                     variables.debug("%s = %s?" % (command, COMMAND))
 
                     if command == COMMAND:
                         variables.debug("Found module %s" % command)
-                        execute(command, user, msgarr)
+                        execute(command, user, msgarr, perms)
                         break;
 
 for item in os.listdir('./modules'):
@@ -323,4 +371,7 @@ thread = Thread(target = recvloop)
 inputthread = Thread(target = postpls)
 inputthread.daemon = True
 inputthread.start()
+#print "Sleeping..."
+#time.sleep(4)
+#print "AWAKE!"
 thread.start()

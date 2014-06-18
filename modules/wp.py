@@ -1,7 +1,7 @@
 import variables, re, string, json as simplejson, urllib, HTMLParser
 from time import sleep
 
-def wp(send_data, msgarr, user):
+def wp(send_data, msgarr, user, perms):
     lastfm = simplejson.load(open("lastfm.json", "r"))
     done = False
     send_data("NAMES %s" % variables.channel)

@@ -1,7 +1,7 @@
 import variables, json, string, os
 debug = False
 
-def account(send_data, msgarr, user):
+def account(send_data, msgarr, user, perms):
 	if len(msgarr) != 2:
 		send_data("PRIVMSG %s :Too many arguments." % variables.channel)
 	else:

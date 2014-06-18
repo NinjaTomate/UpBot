@@ -1,6 +1,6 @@
 import variables, urllib, json as simplejson, string, HTMLParser
 
-def np(send_data, msgarr, user):
+def np(send_data, msgarr, user, perms):
     username = ""
 
     if len(msgarr) < 2:

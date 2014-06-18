@@ -1,7 +1,7 @@
 import variables
 
-def shutdown(send_data, msgarr, user):
-    if user == variables.owner:
+def shutdown(send_data, msgarr, user, permsd):
+    if perms == 999:
         send_data("QUIT")
         sys.exit(1)
 

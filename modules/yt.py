@@ -1,8 +1,10 @@
 import re, variables, urllib, json as simplejson, string, HTMLParser
 
-def yt(send_data, msgarr, user):
+def yt(send_data, msgarr, user, perms):
     if len(msgarr) < 2:
         send_data("PRIVMSG %s :No or invalid search string supplied." % variables.channel)
+    elif int(perms) < 10:
+        send_data("NOTICE %s :Check your privilege." % user)
     else:
         try:
             parser = HTMLParser.HTMLParser()

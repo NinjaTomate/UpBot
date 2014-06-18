@@ -1,6 +1,6 @@
 import variables, urllib2
 
-def isup(send_data, msgarr, user):
+def isup(send_data, msgarr, user, perms):
     if len(msgarr) < 2 or "9gag" in msgarr or "reddit" in msgarr:
         send_data("PRIVMSG %s :Whoops, seems like you forgot entering a website." % variables.channel)
     else:
