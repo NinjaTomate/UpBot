@@ -31,9 +31,7 @@ def wp(send_data, msgarr, user, perms):
                 title = json['recenttracks']['track'][0]['name']
                 playstatus = "is"
             except:
-                artist = json['recenttracks']['track']['artist']['#text']
-                title = json['recenttracks']['track']['name']
-                playstatus = "was"
+                continue
 
             tagsurl = "http://ws.audioscrobbler.com/2.0/?method=track.getTopTags&artist=%s&track=%s&api_key=%s&format=json" % (artist, title, variables.lastFMKey)
             artisttagsurl = "http://ws.audioscrobbler.com/2.0/?method=artist.getTopTags&artist=%s&api_key=%s&format=json" % (artist, variables.lastFMKey)
