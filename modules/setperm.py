@@ -16,4 +16,4 @@ def setperm(send_data, msgarr, user, perms):
 		accounts[target]['perms'] = usrperms
 		json.dump(accounts, accfile)
 		accfile.close()
-		send_data("NOTICE %s :Successfully changed permissions of %s to %s" % (user, target, usprerms))
+		send_data("NOTICE %s :Successfully changed permissions of %s to %s" % (user, target, usrperms))
