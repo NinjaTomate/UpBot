@@ -268,8 +268,7 @@ def recvloop():
             #variables.debug(re.sub('\n','',msg))
 
             try:
-                #variables.debug(msgarr[0])
-                "ech"
+                variables.debug(msgarr[0])
             except:
                 msgarr = string.split("This string magically prevents crashing.")
 
