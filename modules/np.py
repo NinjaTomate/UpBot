@@ -57,7 +57,7 @@ def np(send_data, msgarr, user, perms):
             send_data("PRIVMSG %s :%s %s playing: %s - %s %s" % (variables.channel, listener, playstatus, artist, title, toptags))
         except Exception as e:
             print e
-            send_data("PRIVMSG %s :%s" % (variables.channel, "I just broke. Pester Spacecode about it."))
+            send_data("NOTICE %s :%s" % (user, "Error. Did you forget setting an account?"))
 
 def help(send_data):
     send_data("PRIVMSG %s :Displays user's currently playing song. Usage: .np [lastfm username (optional)]"  % variables.channel)
