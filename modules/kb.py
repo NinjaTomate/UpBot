@@ -5,7 +5,7 @@ def kb(send_data, msgarr, user, perms):
 	if not len(msgarr) >= 2:
 		send_data("PRIVMSG %s :Insufficient variables supplied." % variables.channel)
 	elif int(perms) < 900 or msgarr[1] == variables.owner:
-			send_data("NOTICE %s :Check your privilege." % user)
+		send_data("NOTICE %s :Check your privilege." % user)
 	else:
 		target = msgarr[1]
 		if len(msgarr) >= 3:
